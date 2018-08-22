@@ -6,14 +6,17 @@ import java.util.List;
 import br.com.caelum.leilao.dominio.Leilao;
 import br.com.caelum.leilao.infra.dao.LeilaoDao;
 import br.com.caelum.leilao.infra.dao.LeilaoDaoFalso;
+import br.com.caelum.leilao.infra.dao.RepositorioDeLeiloes;
 
 public class EncerradorDeLeilao {
 
 	private int total = 0;
-	private final LeilaoDao dao;
+	private final RepositorioDeLeiloes dao;
+	private final EnviadorDeEmail carteiro;
 
-	public EncerradorDeLeilao(LeilaoDao dao) {
+	public EncerradorDeLeilao(RepositorioDeLeiloes dao, EnviadorDeEmail carteiro) {
 		this.dao = dao;
+		this.carteiro = carteiro;
 	}
 	
 	public void encerra() {
@@ -24,6 +27,7 @@ public class EncerradorDeLeilao {
 				leilao.encerra();
 				total++;
 				dao.atualiza(leilao);
+				carteiro.envia(leilao);
 			}
 		}
 	}
